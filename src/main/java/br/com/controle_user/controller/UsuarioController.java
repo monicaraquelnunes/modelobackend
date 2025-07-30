@@ -1,6 +1,7 @@
 package br.com.controle_user.controller;
 
 import br.com.controle_user.model.UsuarioModel;
+import br.com.controle_user.repository.UsuarioRepository;
 import br.com.controle_user.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -21,6 +22,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
+@CrossOrigin(origins = "http://localhost:4200")
 @Tag(name = "Controle de Usuário", description = "Aplicação Controle Usuários API")
 @RestController
 @RequestMapping(path = "/usuarios")
@@ -31,8 +33,12 @@ public class UsuarioController {
 
     @Autowired
     public UsuarioController(UsuarioService usuarioService){
+
         this.usuarioService = usuarioService;
     }
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Operation(
             summary = "Salvar usuario",
@@ -126,5 +132,19 @@ public class UsuarioController {
         Optional<UsuarioModel> usuarioModel = usuarioService.updatedUsuarioModel(id, newUsuarioModel);
         return new ResponseEntity<Optional<UsuarioModel>>(usuarioModel, HttpStatus.OK);
     }
+
+    @PutMapping(value= "/{id}/ativo")
+    public ResponseEntity<?> atualizarStatusAtivo(@PathVariable Long id, @RequestParam boolean ativo) {
+        Optional<UsuarioModel> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            UsuarioModel usuarioModel = usuarioOpt.get();
+            usuarioModel.setAtivo(ativo);
+            usuarioRepository.save(usuarioModel);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

@@ -25,6 +25,9 @@ public class UsuarioModel {
     @Column (name = "email")
     private String email;
 
+    @Column (nullable = false)
+    private Boolean ativo = true; // padrão: true (ativo)
+
     // GETTERS
     public Long getId() {
         return id;
@@ -50,7 +53,11 @@ public class UsuarioModel {
         return email;
     }
 
-    // SETTERS (adicione se precisar)
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    // SETTERS
     public void setId(Long id) {
         this.id = id;
     }
@@ -73,6 +80,10 @@ public class UsuarioModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 
 }
